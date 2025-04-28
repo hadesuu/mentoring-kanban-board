@@ -19,32 +19,30 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
-// ✅ Validation schema using zod
-const FormSchema = z.object({
+const loginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
     .string()
     .min(10, "Password must be at least 10 characters")
-    .regex(/[A-Z]/, "Password must include at least one capital letter")
-    .regex(/[a-z]/, "Password must include at least one lowercase letter")
+    .regex(/[A-Z]/, "Password must include a capital letter")
     .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must include a special character"),
 })
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   })
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    toast.success("Login submitted", {
+  const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
+    toast.success("Logged in successfully!", {
       description: (
-        <pre className="mt-2 w-[300px] rounded-md bg-slate-950 p-4 text-white">
+        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 text-white">
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
@@ -52,9 +50,9 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <h1 className="text-2xl font-bold mb-6">Login</h1>
-      <div className="w-full max-w-md">
+    <main className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-6">
+        <h1 className="text-3xl font-bold text-center">Login</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Email Field */}
@@ -90,7 +88,7 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        className="absolute right-2 top-2.5 text-gray-500 hover:text-black"
+                        className="absolute right-2 top-2.5 text-muted-foreground hover:text-foreground"
                         tabIndex={-1}
                       >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -105,8 +103,10 @@ export default function LoginPage() {
               )}
             />
 
-            {/* Submit */}
-            <Button type="submit" className="w-full">Log In</Button>
+            {/* Submit Button */}
+            <Button type="submit" className="w-full">
+              Log In
+            </Button>
           </form>
         </Form>
       </div>
