@@ -19,7 +19,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 
-// ✅ Validation schema using zod
+import { supabase } from "@/utils/supabase/client"
+
+// Validation schema using zod
 const FormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z
@@ -41,14 +43,32 @@ export default function SignupPage() {
     },
   })
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    toast.success("Signup submitted", {
-      description: (
-        <pre className="mt-2 w-[300px] rounded-md bg-slate-950 p-4 text-white">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    const { email, password } = data
+    
+    // Create user with Supabase auth
+    const { user, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'http://localhost:3000/',
+      },
     })
+    
+    if (authError) {
+      // Handle error in sign up
+      toast.error("Signup failed: " + authError.message, {
+        description: <pre className="mt-2 w-[300px] rounded-md bg-red-500 p-4 text-white"><code>{JSON.stringify(authError, null, 2)}</code></pre>,
+      })
+      return
+    }
+
+    // Success message after signup
+    toast.success("Signup submitted successfully! Please check your email to verify your account.", {
+      description: <pre className="mt-2 w-[300px] rounded-md bg-slate-950 p-4 text-white"><code>{JSON.stringify(data, null, 2)}</code></pre>,
+    })
+
+    window.location.href = 'http://localhost:3000/'
   }
 
   return (
