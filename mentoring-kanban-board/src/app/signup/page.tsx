@@ -51,7 +51,7 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        emailRedirectTo: 'http://localhost:3000/',
+        emailRedirectTo: 'http://localhost:3000/verify',
       },
     })
     
