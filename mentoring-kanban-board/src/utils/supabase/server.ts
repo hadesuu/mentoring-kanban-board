@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 type SupabaseCookie = {
   name: string;
   value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options?: any;
 };
 
