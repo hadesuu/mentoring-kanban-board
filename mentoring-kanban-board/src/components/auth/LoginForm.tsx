@@ -50,13 +50,13 @@ export function LoginForm() {
     })
 
     if (error) {
-      console.error("Login error:", error.message)
       if (error.message.includes("Email not confirmed")) {
         toast.error("Please confirm your email first.")
       } else {
         toast.error("Login failed: " + error.message)
       }
-    } else {
+    } 
+    else {
       toast.success("Login successful!")
       router.push("/dashboard")
     }
