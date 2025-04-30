@@ -1,11 +1,11 @@
 // app/login/page.tsx
 
-import { LoginForm } from "@/components/auth/LoginForm"
+import LoginView from "@/views/Login"
 
 export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <LoginForm />
+      <LoginView />
     </div>
   )
 }

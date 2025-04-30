@@ -4,8 +4,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase/client";
 import AuthForm from "@/components/AuthForm";
+import { useRouter } from "next/navigation";
 
 export default function SignupView() {
+  const router = useRouter()
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (data: { email: string; password: string }) => {
@@ -24,7 +26,7 @@ export default function SignupView() {
       toast.error("Signup failed: " + error.message);
     } else {
       toast.success("Check your email to confirm your signup.");
-      window.location.href = "/";
+      router.push("/login");
     }
 
     setLoading(false);
