@@ -5,14 +5,9 @@ import { redirect } from 'next/navigation'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-
-  console.log(searchParams.toString())
-
   const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const next = searchParams.get('next') ?? '/'
-
-  console.log({ token_hash, type })
 
   if (token_hash && type) {
     const supabase = await createClient()
@@ -20,14 +15,13 @@ export async function GET(request: NextRequest) {
       type,
       token_hash,
     })
-
-    console.log({ error })
-    
     if (!error) {
-      // redirect user to specified redirect URL or root of app
-      redirect(next)
+      return redirect(next)
+    } else {
+      console.error(error)
+      return redirect('/error')
     }
   }
-  // redirect the user to an error page with some instructions
-  redirect('/error')
+  console.error('Missing token_hash or type in query params')
+  return redirect('/error')
 }
