@@ -7,7 +7,7 @@ import AuthForm from "@/components/AuthForm";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function SignupView() {
+export default function LoginView() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -15,19 +15,18 @@ export default function SignupView() {
     setLoading(true);
     const { email, password } = data;
 
-    const { error } = await supabase.auth.signUp({
+    const { data: ddddd, error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        emailRedirectTo: "http://localhost:3000/auth/confirm",
-      },
     });
 
+    console.log(ddddd);
+
     if (error) {
-      toast.error("Signup failed: " + error.message);
+      toast.error("Login failed: " + error.message);
     } else {
       toast.success("Check your email to confirm your signup.");
-      router.push("/login");
+      router.push("/private");
     }
 
     setLoading(false);
@@ -37,12 +36,15 @@ export default function SignupView() {
     <AuthForm
       onSubmit={handleSignup}
       loading={loading}
-      buttonLabel="Sign Up"
-      formTitle="Sign Up"
-      formDescription="Please signup with email and password to continue"
+      buttonLabel="Log in"
+      formTitle="Log in"
+      formDescription="Please login to continue"
       footer={
         <>
-          Already have an account? <Link href="/login" className="text-blue-500">Log In</Link>
+          {"Don't"} have an account?{" "}
+          <Link href="/signup" className=" text-blue-500">
+            Sign Up
+          </Link>
         </>
       }
     />

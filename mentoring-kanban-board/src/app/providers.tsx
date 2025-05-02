@@ -1,25 +1,27 @@
 // app/providers.tsx
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { supabase } from "@/utils/supabase/client"
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((event/*, session*/) => {
-      if (event === "SIGNED_IN") {
-        router.push("/dashboard")
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (event /*, session*/) => {
+        if (event === "SIGNED_IN") {
+          router.push("/private");
+        }
+        if (event === "SIGNED_OUT") {
+          router.push("/login");
+        }
       }
-      if (event === "SIGNED_OUT") {
-        router.push("/login")
-      }
-    })
+    );
 
-    return () => listener.subscription.unsubscribe()
-  }, [router])
+    return () => listener.subscription.unsubscribe();
+  }, [router]);
 
-  return <>{children}</>
+  return <>{children}</>;
 }
